@@ -1,0 +1,55 @@
+diff -rupN qemu-1.7.0/hw/ide/atapi.c qemu-1.7.0_hs/hw/ide/atapi.c
+--- qemu-1.7.0/hw/ide/atapi.c	2013-11-28 04:15:55.000000000 +0600
++++ qemu-1.7.0_hs/hw/ide/atapi.c	2014-02-26 03:01:34.311590163 +0600
+@@ -630,8 +630,8 @@ static void cmd_inquiry(IDEState *s, uin
+     buf[5] = 0; /* reserved */
+     buf[6] = 0; /* reserved */
+     buf[7] = 0; /* reserved */
+-    padstr8(buf + 8, 8, "QEMU");
+-    padstr8(buf + 16, 16, "QEMU DVD-ROM");
++    padstr8(buf + 8, 8, "TSSTcorp");
++    padstr8(buf + 16, 16, "CD/DVDW");
+     padstr8(buf + 32, 4, s->version);
+     ide_atapi_cmd_reply(s, 36, max_len);
+ }
+diff -rupN qemu-1.7.0/hw/ide/core.c qemu-1.7.0_hs/hw/ide/core.c
+--- qemu-1.7.0/hw/ide/core.c	2013-11-28 04:15:55.000000000 +0600
++++ qemu-1.7.0_hs/hw/ide/core.c	2014-02-26 02:59:57.565594230 +0600
+@@ -2125,13 +2125,13 @@ int ide_init_drive(IDEState *s, BlockDri
+     } else {
+         switch (kind) {
+         case IDE_CD:
+-            strcpy(s->drive_model_str, "QEMU DVD-ROM");
++            strcpy(s->drive_model_str, "TSSTcorp CD/DVDW");
+             break;
+         case IDE_CFATA:
+-            strcpy(s->drive_model_str, "QEMU MICRODRIVE");
++            strcpy(s->drive_model_str, "IBM MICRODRIVE");
+             break;
+         default:
+-            strcpy(s->drive_model_str, "QEMU HARDDISK");
++            strcpy(s->drive_model_str, "ST3200822A");
+             break;
+         }
+     }
+diff -rupN qemu-1.7.0/hw/scsi/scsi-disk.c qemu-1.7.0_hs/hw/scsi/scsi-disk.c
+--- qemu-1.7.0/hw/scsi/scsi-disk.c	2013-11-28 04:15:55.000000000 +0600
++++ qemu-1.7.0_hs/hw/scsi/scsi-disk.c	2014-02-26 03:03:26.889585430 +0600
+@@ -2130,7 +2130,7 @@ static int scsi_hd_initfn(SCSIDevice *de
+     s->qdev.blocksize = s->qdev.conf.logical_block_size;
+     s->qdev.type = TYPE_DISK;
+     if (!s->product) {
+-        s->product = g_strdup("QEMU HARDDISK");
++        s->product = g_strdup("ST3200822A");
+     }
+     return scsi_initfn(&s->qdev);
+ }
+@@ -2142,7 +2142,7 @@ static int scsi_cd_initfn(SCSIDevice *de
+     s->qdev.type = TYPE_ROM;
+     s->features |= 1 << SCSI_DISK_F_REMOVABLE;
+     if (!s->product) {
+-        s->product = g_strdup("QEMU CD-ROM");
++        s->product = g_strdup("TSSTcorp CD/DVDW");
+     }
+     return scsi_initfn(&s->qdev);
+ }
